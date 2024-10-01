@@ -1,20 +1,19 @@
 import pickle
 
-data = {}
-for i in range(10000):
-    try:
-        file = open('teamMatches' + str(i), 'rb')
-        data[i] = pickle.load(file)
-        file.close()
-    except:
-        pass
+
+file = open('allTeamsMatches', 'rb')
+data = pickle.load(file)
+file.close()
 
 
 globalTPW = {}
 globalTPA = {}
 
+teamsG = []
 
 for team in data:
+    print(team)
+    teamsG.append(team)
     teamsPlayedWith = {}
     teamsPlayedAgainst = {}
     
@@ -53,17 +52,31 @@ for team in data:
     globalTPW[team] = teamsPlayedWith
     globalTPA[team] = teamsPlayedAgainst
 
+
+saveStr = "\t"
 print("", end= "\t")
 for team in teamsG:
+    saveStr = saveStr + str(team) + "\t"
     print(team, "\t", end = "")
 
+with open("output.txt", "a+") as text_file:
+    text_file.write(saveStr)
+
+
 for teama in teamsG:
+    saveStr = ""
     team1 = int(teama)
-    print("")
-    print(teama, end = "\t")
+    saveStr = saveStr + "\n" + str(teama) + "\t"
+    print(teama)
+    #print(teama, end = "\t")
     for teamb in teamsG:
         team2 = int(teamb)
-        print(globalTPW[team1].get(team2,0), end = "\t")
+        #print(globalTPW[team1].get(team2,0), end = "\t")
+        saveStr = saveStr + str(globalTPW[team1].get(team2,0)) + "\t"
+
+    with open("output.txt", "a+") as text_file:
+        text_file.write(saveStr)
+
 
 
 
