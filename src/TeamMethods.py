@@ -13,3 +13,9 @@ class TeamMethods:
 
     def getAllTeams(self):
         return self.tba.teams()
+
+    def getDistricts(self):
+        return self.tba.districts(2024)
+
+    def getTeamsInDist(self, dist):
+        return self.tba.district_teams("2024" + dist)
