@@ -4,6 +4,19 @@ import numpy as np
 tba = TBAGetter()
 tba = tba.getTBA()
 
+def reefToTotalCoral(reef):
+	tc = 0
+	for node in reef["botRow"]:
+		if(reef["botRow"][node]):
+			tc = tc + 1
+	for node in reef["midRow"]:
+		if(reef["midRow"][node]):
+			tc = tc + 1
+	for node in reef["topRow"]:
+		if(reef["topRow"][node]):
+			tc = tc + 1
+	return tc
+
 eventStr = "2025week0"
 event = tba.event_matches(eventStr)
 teams = tba.event_teams(eventStr)
@@ -23,6 +36,12 @@ for match in event:
 		bs = 0 #make total blue coral
 		rt = match.alliances["red"]["team_keys"]
 		rs = 0 #make total red coral
+
+		bsReef = match.score_breakdown["blue"]["teleopReef"]
+		rsReef = match.score_breakdown["red"]["teleopReef"]
+
+		bs = reefToTotalCoral(bsReef)
+		rs = reefToTotalCoral(rsReef)
 
 		aRow = []
 
