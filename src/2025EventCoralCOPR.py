@@ -1,26 +1,28 @@
 from TBAGetter import TBAGetter
 import numpy as np
 
+#12.44 for 1258
+
 tba = TBAGetter()
 tba = tba.getTBA()
 
-def reefToTotalCoral(reefT, reefA, l):
+def reefToTotalCoral(reefT, l):
 	tc = 0
 	if(1 in l):
-		tc = tc + reefT["trough"] - reefA["trough"]
+		tc = tc + reefT["trough"]
 	if(2 in l):
 
 		for node in reefT["botRow"]:
-			if(reefT["botRow"][node] and not reefA["botRow"][node]):
+			if(reefT["botRow"][node]):
 				tc = tc + 1
 	if(3 in l):			
 		for node in reefT["midRow"]:
-			if(reefT["midRow"][node] and not reefA["midRow"][node]):
+			if(reefT["midRow"][node]):
 				tc = tc + 1
 	
 	if(4 in l):
 		for node in reefT["topRow"]:
-			if(reefT["topRow"][node]  and not reefA["topRow"][node]):
+			if(reefT["topRow"][node]):
 				tc = tc + 1
 	return tc
 
@@ -53,8 +55,8 @@ for match in event:
 		bsReefA = match.score_breakdown["blue"]["autoReef"]
 		rsReefA = match.score_breakdown["red"]["autoReef"]
 
-		bs = reefToTotalCoral(bsReefT, bsReefA, [4,3,2,1]) 
-		rs = reefToTotalCoral(rsReefT, rsReefA, [4,3,2,1])
+		bs = reefToTotalCoral(bsReefT, [4,3,2,1]) - reefToTotalCoral(bsReefA, [4,3,2,1])  
+		rs = reefToTotalCoral(rsReefT, [4,3,2,1]) - reefToTotalCoral(rsReefA, [4,3,2,1])  
 		eventCoralTotal = eventCoralTotal + bs + rs
 
 		aRow = []
@@ -85,7 +87,7 @@ x = np.linalg.lstsq(a,b)
 
 x = x[0]
 
-for i in range(len(teamList)):
+for i in range(1):
 	print(teamList[i], "\t", x[i])
 
 print(eventCoralTotal, eventMatches)
