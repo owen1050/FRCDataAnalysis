@@ -4,17 +4,24 @@ import numpy as np
 tba = TBAGetter()
 tba = tba.getTBA()
 
-def reefToTotalCoral(reef):
+def reefToTotalCoral(reefT, reefA, l):
 	tc = 0
-	for node in reef["botRow"]:
-		if(reef["botRow"][node]):
-			tc = tc + 1
-	for node in reef["midRow"]:
-		if(reef["midRow"][node]):
-			tc = tc + 1
-	for node in reef["topRow"]:
-		if(reef["topRow"][node]):
-			tc = tc + 1
+	if(1 in l):
+		tc = tc + reefT["trough"] - reefA["trough"]
+	if(2 in l):
+
+		for node in reefT["botRow"]:
+			if(reefT["botRow"][node] and not reefA["botRow"][node]):
+				tc = tc + 1
+	if(3 in l):			
+		for node in reefT["midRow"]:
+			if(reefT["midRow"][node] and not reefA["midRow"][node]):
+				tc = tc + 1
+	
+	if(4 in l):
+		for node in reefT["topRow"]:
+			if(reefT["topRow"][node]  and not reefA["topRow"][node]):
+				tc = tc + 1
 	return tc
 
 eventStr = "2025week0"
@@ -30,18 +37,25 @@ for team in teams:
 a = []
 b = []
 #score
+eventCoralTotal = 0;
+eventMatches = 0
 for match in event:
 	if(match.comp_level == "qm"):
+		eventMatches = eventMatches + 1
 		bt = match.alliances["blue"]["team_keys"]
 		bs = 0 #make total blue coral
 		rt = match.alliances["red"]["team_keys"]
 		rs = 0 #make total red coral
 
-		bsReef = match.score_breakdown["blue"]["teleopReef"]
-		rsReef = match.score_breakdown["red"]["teleopReef"]
+		bsReefT = match.score_breakdown["blue"]["teleopReef"]
+		rsReefT = match.score_breakdown["red"]["teleopReef"]
 
-		bs = reefToTotalCoral(bsReef)
-		rs = reefToTotalCoral(rsReef)
+		bsReefA = match.score_breakdown["blue"]["autoReef"]
+		rsReefA = match.score_breakdown["red"]["autoReef"]
+
+		bs = reefToTotalCoral(bsReefT, bsReefA, [4,3,2,1]) 
+		rs = reefToTotalCoral(rsReefT, rsReefA, [4,3,2,1])
+		eventCoralTotal = eventCoralTotal + bs + rs
 
 		aRow = []
 
@@ -73,3 +87,5 @@ x = x[0]
 
 for i in range(len(teamList)):
 	print(teamList[i], "\t", x[i])
+
+print(eventCoralTotal, eventMatches)
