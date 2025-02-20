@@ -150,3 +150,121 @@ class matchAnal2025:
 		x = x[0]
 
 		return (teamList, x)
+
+	def coprFromMatchResult(self, event, result):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		teamList = []
+
+		for team in teams:
+			teamList.append(team.key);
+
+		#team 1 in match, team 2 in match, team 3 in match
+		a = []
+		b = []
+		#score
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+			if(match.comp_level == "qm"):
+				eventMatches = eventMatches + 1
+				bt = match.alliances["blue"]["team_keys"]
+				bs = 0 #make total blue coral
+				rt = match.alliances["red"]["team_keys"]
+				rs = 0 #make total red coral
+
+				bs = match.score_breakdown["blue"][result]
+				rs = match.score_breakdown["red"][result]
+
+				eventCoralTotal = eventCoralTotal + bs + rs
+
+				aRow = []
+
+				for team in teamList:
+					if(team in bt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(bs)
+
+				aRow = []
+
+				for team in teamList:
+					if(team in rt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(rs)
+
+		a = np.array(a)
+		b = np.array(b)
+
+
+		x = np.linalg.lstsq(a,b)
+
+		x = x[0]
+
+		return (teamList, x)
+
+	def coprNetMinusOponentProcessor(self, event):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		teamList = []
+
+		for team in teams:
+			teamList.append(team.key);
+
+		#team 1 in match, team 2 in match, team 3 in match
+		a = []
+		b = []
+		#score
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+			if(match.comp_level == "qm"):
+				eventMatches = eventMatches + 1
+				bt = match.alliances["blue"]["team_keys"]
+				bs = 0 #make total blue coral
+				rt = match.alliances["red"]["team_keys"]
+				rs = 0 #make total red coral
+
+				bs = match.score_breakdown["blue"]["netAlgaeCount"] - match.score_breakdown["red"]["wallAlgaeCount"]
+				rs = match.score_breakdown["red"]["netAlgaeCount"] - match.score_breakdown["blue"]["wallAlgaeCount"]
+
+				eventCoralTotal = eventCoralTotal + bs + rs
+
+				aRow = []
+
+				for team in teamList:
+					if(team in bt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(bs)
+
+				aRow = []
+
+				for team in teamList:
+					if(team in rt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(rs)
+
+		a = np.array(a)
+		b = np.array(b)
+
+
+		x = np.linalg.lstsq(a,b)
+
+		x = x[0]
+
+		return (teamList, x)
