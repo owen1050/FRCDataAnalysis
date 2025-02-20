@@ -268,3 +268,68 @@ class matchAnal2025:
 		x = x[0]
 
 		return (teamList, x)
+
+	def getClimbCounts(self, event):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		parkList = {}
+		shallowList = {}
+		deepList = {}
+		numMatches = {}
+
+		for team in teams:
+			parkList[team.key] = 0
+			shallowList[team.key] = 0
+			deepList[team.key] = 0
+			numMatches[team.key] = 0
+
+
+		#team 1 in match, team 2 in match, team 3 in match
+
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+				
+			bt = match.alliances["blue"]["team_keys"]
+			rt = match.alliances["red"]["team_keys"]
+			#"endGameRobot1"
+			
+			for i in range(3):
+				climbState  = match.score_breakdown["blue"]["endGameRobot" + str(i+1)]
+				if(climbState == "Parked"):
+					parkList[bt[i]] = parkList[bt[i]] + 1
+				if(climbState == "DeepCage"):
+					deepList[bt[i]] = deepList[bt[i]] + 1
+				if(climbState == "ShallowCage"):
+					shallowList[bt[i]] = shallowList[bt[i]] + 1
+				numMatches[bt[i]] = numMatches[bt[i]] + 1
+
+			for i in range(3):
+				climbState  = match.score_breakdown["red"]["endGameRobot" + str(i+1)]
+				if(climbState == "Parked"):
+					parkList[rt[i]] = parkList[rt[i]] + 1
+				if(climbState == "DeepCage"):
+					deepList[rt[i]] = deepList[rt[i]] + 1
+				if(climbState == "ShallowCage"):
+					shallowList[rt[i]] = shallowList[rt[i]] + 1
+				numMatches[rt[i]] = numMatches[rt[i]] + 1
+
+		ret = {}
+		sl = []
+		dl = []
+		pl = []
+		tl = []
+
+		for team in numMatches:
+			s = shallowList[team] / numMatches[team]
+
+			d = deepList[team] / numMatches[team]
+
+			p = parkList[team] / numMatches[team]
+			sl.append(s)
+			dl.append(d)
+			pl.append(p)
+			tl.append(s+d+p)
+		return [pl, sl, dl, tl]
