@@ -333,3 +333,103 @@ class matchAnal2025:
 			pl.append(p)
 			tl.append(s+d+p)
 		return [pl, sl, dl, tl]
+
+	def getAutoMoveCounts(self, event):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		moveList = {}
+		numMatches = {}
+
+		for team in teams:
+			moveList[team.key] = 0
+			numMatches[team.key] = 0
+
+
+		#team 1 in match, team 2 in match, team 3 in match
+
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+				
+			bt = match.alliances["blue"]["team_keys"]
+			rt = match.alliances["red"]["team_keys"]
+			#"endGameRobot1"
+			
+			for i in range(3):
+				moveState  = match.score_breakdown["blue"]["autoLineRobot" + str(i+1)]
+				if(moveState == "Yes"):
+					moveList[bt[i]] = moveList[bt[i]] + 1
+				numMatches[bt[i]] = numMatches[bt[i]] + 1
+
+			for i in range(3):
+				moveState  = match.score_breakdown["red"]["autoLineRobot" + str(i+1)]
+				if(moveState == "Yes"):
+					moveList[rt[i]] = moveList[rt[i]] + 1
+				numMatches[rt[i]] = numMatches[rt[i]] + 1
+
+		ml = []
+
+		for team in numMatches:
+			m = moveList[team] / numMatches[team]
+
+			ml.append(m)
+		return ml
+
+	def getFouls(self, event):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		teamList = []
+
+		for team in teams:
+			teamList.append(team.key);
+
+		#team 1 in match, team 2 in match, team 3 in match
+		a = []
+		b = []
+		#score
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+			if(match.comp_level == "qm"):
+				eventMatches = eventMatches + 1
+				bt = match.alliances["blue"]["team_keys"]
+				bs = 0 #make total blue coral
+				rt = match.alliances["red"]["team_keys"]
+				rs = 0 #make total red coral
+
+				bs = match.score_breakdown["red"]["foulPoints"]
+				rs = match.score_breakdown["blue"]["foulPoints"]
+
+				aRow = []
+
+				for team in teamList:
+					if(team in bt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(bs)
+
+				aRow = []
+
+				for team in teamList:
+					if(team in rt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(rs)
+
+		a = np.array(a)
+		b = np.array(b)
+
+
+		x = np.linalg.lstsq(a,b)
+
+		x = x[0]
+
+		return (teamList, x)

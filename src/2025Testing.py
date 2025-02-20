@@ -23,11 +23,12 @@ def printCOPRs(event):
 	shallow = climbs[1]
 	deep = climbs[2]
 	egPercent = climbs[3]
+	movePer = ma.getAutoMoveCounts(event)
+	fouls = ma.getFouls(event)
 	
-
 	tl = l1A[0]
 
-	outputData = [["Team", "OPR", "Auto Coral PTS", "L1A COPR", "L2A COPR", "L3A COPR", "L4A COPR", "Teleop Coral PTS", "L1T COPR", "L2T COPR", "L3T COPR", "L4T COPR", "Processor Algae", "Net Algae", "Park Percent", "Shallow Percent", "Deep Percent", "End Game Percent"]]
+	outputData = [["Team", "OPR", "Auto Coral PTS", "L1A COPR", "L2A COPR", "L3A COPR", "L4A COPR", "Teleop Coral PTS", "L1T COPR", "L2T COPR", "L3T COPR", "L4T COPR", "Processor Algae", "Net Algae", "Park Percent", "Shallow Percent", "Deep Percent", "End Game Percent", "Auto Move Percent", "foul points"]]
 
 	for i in range(len(tl)):
 		row = []
@@ -49,7 +50,8 @@ def printCOPRs(event):
 		row.append(shallow[i])
 		row.append(deep[i])
 		row.append(egPercent[i])
-
+		row.append(movePer[i])
+		row.append(fouls[1][i])
 		outputData.append(row)
 
 
