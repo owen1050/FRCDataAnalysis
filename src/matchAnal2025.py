@@ -1,0 +1,152 @@
+from TBAGetter import TBAGetter
+import numpy as np
+
+#12.44 for 1258
+
+class matchAnal2025:
+	tba = TBAGetter()
+	tba = tba.getTBA()
+
+	def reefToTotalCoral(self, reefT, l):
+		tc = 0
+		if(1 in l):
+			tc = tc + reefT["trough"]
+		if(2 in l):
+
+			for node in reefT["botRow"]:
+				if(reefT["botRow"][node]):
+					tc = tc + 1
+		if(3 in l):			
+			for node in reefT["midRow"]:
+				if(reefT["midRow"][node]):
+					tc = tc + 1
+		
+		if(4 in l):
+			for node in reefT["topRow"]:
+				if(reefT["topRow"][node]):
+					tc = tc + 1
+		return tc
+
+	def getCoralOPRFromEvent(self, event, levels, auto):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		teamList = []
+
+		for team in teams:
+			teamList.append(team.key);
+
+		#team 1 in match, team 2 in match, team 3 in match
+		a = []
+		b = []
+		#score
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+			if(match.comp_level == "qm"):
+				eventMatches = eventMatches + 1
+				bt = match.alliances["blue"]["team_keys"]
+				bs = 0 #make total blue coral
+				rt = match.alliances["red"]["team_keys"]
+				rs = 0 #make total red coral
+
+				bsReefT = match.score_breakdown["blue"]["teleopReef"]
+				rsReefT = match.score_breakdown["red"]["teleopReef"]
+				if(auto):
+					bsReefT = match.score_breakdown["blue"]["autoReef"]
+					rsReefT = match.score_breakdown["red"]["autoReef"]
+
+				bs = self.reefToTotalCoral(bsReefT, levels)
+				rs = self.reefToTotalCoral(rsReefT, levels)
+
+				eventCoralTotal = eventCoralTotal + bs + rs
+
+				aRow = []
+
+				for team in teamList:
+					if(team in bt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(bs)
+
+				aRow = []
+
+				for team in teamList:
+					if(team in rt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(rs)
+
+		a = np.array(a)
+		b = np.array(b)
+
+
+		x = np.linalg.lstsq(a,b)
+
+		x = x[0]
+
+		return (teamList, x)
+
+	def getOPRFromEvent(self, event):
+		eventStr = event
+		event = self.tba.event_matches(eventStr)
+		teams = self.tba.event_teams(eventStr)
+
+		teamList = []
+
+		for team in teams:
+			teamList.append(team.key);
+
+		#team 1 in match, team 2 in match, team 3 in match
+		a = []
+		b = []
+		#score
+		eventCoralTotal = 0;
+		eventMatches = 0
+		for match in event:
+			if(match.comp_level == "qm"):
+				eventMatches = eventMatches + 1
+				bt = match.alliances["blue"]["team_keys"]
+				bs = 0 #make total blue coral
+				rt = match.alliances["red"]["team_keys"]
+				rs = 0 #make total red coral
+
+				bs = match.alliances["blue"]["score"]
+				rs = match.alliances["red"]["score"]
+
+				eventCoralTotal = eventCoralTotal + bs + rs
+
+				aRow = []
+
+				for team in teamList:
+					if(team in bt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(bs)
+
+				aRow = []
+
+				for team in teamList:
+					if(team in rt):
+						aRow.append(1)
+					else:
+						aRow.append(0)
+				a.append(aRow)
+				b.append(rs)
+
+		a = np.array(a)
+		b = np.array(b)
+
+
+		x = np.linalg.lstsq(a,b)
+
+		x = x[0]
+
+		return (teamList, x)
