@@ -55,9 +55,13 @@ for match in event:
 		bsReefA = match.score_breakdown["blue"]["autoReef"]
 		rsReefA = match.score_breakdown["red"]["autoReef"]
 
-		bs = reefToTotalCoral(bsReefT, [4,3,2,1]) - reefToTotalCoral(bsReefA, [4,3,2,1])  
-		rs = reefToTotalCoral(rsReefT, [4,3,2,1]) - reefToTotalCoral(rsReefA, [4,3,2,1])  
+		bs = match.score_breakdown["blue"]["teleopCoralCount"]
+		rs = match.score_breakdown["red"]["teleopCoralCount"]
 		eventCoralTotal = eventCoralTotal + bs + rs
+
+		if(bs != reefToTotalCoral(bsReefT, [1,2,3,4])):
+			print(match.key, bs, reefToTotalCoral(bsReefT, [1,2,3,4]))
+			print(match)
 
 		aRow = []
 
@@ -87,7 +91,8 @@ x = np.linalg.lstsq(a,b)
 
 x = x[0]
 
-for i in range(1):
-	print(teamList[i], "\t", x[i])
+for i in range(len(teamList)):
+	pass
+	#print(teamList[i], "\t", x[i])
 
-print(eventCoralTotal, eventMatches)
+#print(eventCoralTotal, eventMatches)
