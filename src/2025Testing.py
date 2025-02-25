@@ -61,4 +61,4 @@ def printCOPRs(event):
 		print()
 
 
-printCOPRs("2025week0")
+printCOPRs("2025isde1")

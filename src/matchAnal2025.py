@@ -32,6 +32,12 @@ class matchAnal2025:
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
 
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
+
 		teamList = []
 
 		for team in teams:
@@ -97,6 +103,11 @@ class matchAnal2025:
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
 
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		teamList = []
 
 		for team in teams:
@@ -155,7 +166,11 @@ class matchAnal2025:
 		eventStr = event
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
-
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		teamList = []
 
 		for team in teams:
@@ -216,7 +231,11 @@ class matchAnal2025:
 		teams = self.tba.event_teams(eventStr)
 
 		teamList = []
-
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		for team in teams:
 			teamList.append(team.key);
 
@@ -273,7 +292,11 @@ class matchAnal2025:
 		eventStr = event
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
-
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		parkList = {}
 		shallowList = {}
 		deepList = {}
@@ -338,7 +361,11 @@ class matchAnal2025:
 		eventStr = event
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
-
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		moveList = {}
 		numMatches = {}
 
@@ -381,7 +408,11 @@ class matchAnal2025:
 		eventStr = event
 		event = self.tba.event_matches(eventStr)
 		teams = self.tba.event_teams(eventStr)
-
+		doneMatches = []
+		for match in event:
+			if(match.actual_time != "None" and match.score_breakdown != None):
+				doneMatches.append(match)
+		event = doneMatches
 		teamList = []
 
 		for team in teams:
