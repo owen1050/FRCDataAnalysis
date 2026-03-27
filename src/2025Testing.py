@@ -1,30 +1,29 @@
 from matchAnal2025 import matchAnal2025
 
-ma = matchAnal2025()
 
 
-def printCOPRs(event):
+def printCOPRs():
 	#to add, climb, fouls, mobility
-	l1A = ma.getCoralOPRFromEvent(event, [1], True)
-	l2A = ma.getCoralOPRFromEvent(event, [2], True)
-	l3A = ma.getCoralOPRFromEvent(event, [3], True)
-	l4A = ma.getCoralOPRFromEvent(event, [4], True)
-	l1T = ma.getCoralOPRFromEvent(event, [1], False)
-	l2T = ma.getCoralOPRFromEvent(event, [2], False)
-	l3T = ma.getCoralOPRFromEvent(event, [3], False)
-	l4T = ma.getCoralOPRFromEvent(event, [4], False)
-	oprs = ma.getOPRFromEvent(event)
-	coralAuto = ma.coprFromMatchResult(event, "autoCoralPoints")
-	coralTele = ma.coprFromMatchResult(event, "teleopCoralPoints")
-	algaeScored = ma.coprFromMatchResult(event, "wallAlgaeCount")
-	algaeNet = ma.coprNetMinusOponentProcessor(event)
-	climbs = ma.getClimbCounts(event)
+	l1A = ma.getCoralOPRFromEvent([1], True)
+	l2A = ma.getCoralOPRFromEvent([2], True)
+	l3A = ma.getCoralOPRFromEvent([3], True)
+	l4A = ma.getCoralOPRFromEvent([4], True)
+	l1T = ma.getCoralOPRFromEvent([1], False)
+	l2T = ma.getCoralOPRFromEvent([2], False)
+	l3T = ma.getCoralOPRFromEvent([3], False)
+	l4T = ma.getCoralOPRFromEvent([4], False)
+	oprs = ma.getOPRFromEvent()
+	coralAuto = ma.coprFromMatchResult("autoCoralPoints")
+	coralTele = ma.coprFromMatchResult("teleopCoralPoints")
+	algaeScored = ma.coprFromMatchResult("wallAlgaeCount")
+	algaeNet = ma.coprNetMinusOponentProcessor()
+	climbs = ma.getClimbCounts()
 	park = climbs[0]
 	shallow = climbs[1]
 	deep = climbs[2]
 	egPercent = climbs[3]
-	movePer = ma.getAutoMoveCounts(event)
-	fouls = ma.getFouls(event)
+	movePer = ma.getAutoMoveCounts()
+	fouls = ma.getFouls()
 	
 	tl = l1A[0]
 
@@ -60,5 +59,5 @@ def printCOPRs(event):
 			print(i, end = "\t")
 		print()
 
-
-printCOPRs("2025isde1")
+ma = matchAnal2025("2025isde1")
+printCOPRs()

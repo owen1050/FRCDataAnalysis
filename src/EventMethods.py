@@ -117,4 +117,29 @@ class EventMethods:
             except:
                 pass
         return ret
-        
+
+    def getWinnersOfEvent(self, event):
+        winners = []
+        oneEvent = self.tba.event_awards(event)
+        for award in oneEvent:
+            if(award["award_type"] == 1):
+                for teams in award["recipient_list"]:
+                    winners.append(teams["team_key"])
+        return winners
+
+    def getAllTeams(self):
+        return self.tba.teams()
+em = EventMethods()
+teams = em.getAllTeams()
+for teamCode in teams:
+    try:
+        team = teamCode["key"][3:]
+        events = em.getAllTeamEvents(int(team))
+        for i in range(len(events) - 1):
+
+                teamId = "frc" + str(team)
+                if(teamId in em.getWinnersOfEvent(events[i]["key"]) and teamId in em.getWinnersOfEvent(events[i+1]["key"])):
+                    if(events[i]["key"][0:4] == events[i+1]["key"][0:4]):
+                        print(team, events[i]["key"][0:4], events[i]["key"], events[i+1]["key"])
+    except:
+        pass

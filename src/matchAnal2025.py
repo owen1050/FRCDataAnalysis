@@ -3,9 +3,15 @@ import numpy as np
 
 #12.44 for 1258
 
-class matchAnal2025:
+class matchAnal2025():
 	tba = TBAGetter()
 	tba = tba.getTBA()
+	event = []
+	teams = []
+
+	def __init__(self, eventStr):
+		self.event = self.tba.event_matches(eventStr)
+		self.teams = self.tba.event_teams(eventStr)
 
 	def reefToTotalCoral(self, reefT, l):
 		tc = 0
@@ -27,20 +33,17 @@ class matchAnal2025:
 					tc = tc + 1
 		return tc
 
-	def getCoralOPRFromEvent(self, event, levels, auto):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
-
+	def getCoralOPRFromEvent(self, levels, auto):
+		
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
 
 		teamList = []
 
-		for team in teams:
+		for team in self.teams:
 			teamList.append(team.key);
 
 		#team 1 in match, team 2 in match, team 3 in match
@@ -91,26 +94,22 @@ class matchAnal2025:
 		a = np.array(a)
 		b = np.array(b)
 
-
 		x = np.linalg.lstsq(a,b)
 
 		x = x[0]
 
 		return (teamList, x)
 
-	def getOPRFromEvent(self, event):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
+	def getOPRFromEvent(self):
 
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
 		teamList = []
 
-		for team in teams:
+		for team in self.teams:
 			teamList.append(team.key);
 
 		#team 1 in match, team 2 in match, team 3 in match
@@ -162,18 +161,15 @@ class matchAnal2025:
 
 		return (teamList, x)
 
-	def coprFromMatchResult(self, event, result):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
+	def coprFromMatchResult(self, result):
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
 		teamList = []
 
-		for team in teams:
+		for team in self.teams:
 			teamList.append(team.key);
 
 		#team 1 in match, team 2 in match, team 3 in match
@@ -225,18 +221,14 @@ class matchAnal2025:
 
 		return (teamList, x)
 
-	def coprNetMinusOponentProcessor(self, event):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
-
+	def coprNetMinusOponentProcessor(self):
 		teamList = []
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
-		for team in teams:
+		for team in self.teams:
 			teamList.append(team.key);
 
 		#team 1 in match, team 2 in match, team 3 in match
@@ -288,12 +280,9 @@ class matchAnal2025:
 
 		return (teamList, x)
 
-	def getClimbCounts(self, event):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
+	def getClimbCounts(self):
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
@@ -302,7 +291,7 @@ class matchAnal2025:
 		deepList = {}
 		numMatches = {}
 
-		for team in teams:
+		for team in self.teams:
 			parkList[team.key] = 0
 			shallowList[team.key] = 0
 			deepList[team.key] = 0
@@ -357,19 +346,16 @@ class matchAnal2025:
 			tl.append(s+d+p)
 		return [pl, sl, dl, tl]
 
-	def getAutoMoveCounts(self, event):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
+	def getAutoMoveCounts(self):
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
 		moveList = {}
 		numMatches = {}
 
-		for team in teams:
+		for team in self.teams:
 			moveList[team.key] = 0
 			numMatches[team.key] = 0
 
@@ -404,18 +390,15 @@ class matchAnal2025:
 			ml.append(m)
 		return ml
 
-	def getFouls(self, event):
-		eventStr = event
-		event = self.tba.event_matches(eventStr)
-		teams = self.tba.event_teams(eventStr)
+	def getFouls(self):
 		doneMatches = []
-		for match in event:
+		for match in self.event:
 			if(match.actual_time != "None" and match.score_breakdown != None):
 				doneMatches.append(match)
 		event = doneMatches
 		teamList = []
 
-		for team in teams:
+		for team in self.teams:
 			teamList.append(team.key);
 
 		#team 1 in match, team 2 in match, team 3 in match
